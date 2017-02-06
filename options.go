@@ -97,6 +97,12 @@ func CookieName(name string) Option {
 	}
 }
 
+func SetSkipPaths(paths []string) Option {
+	return func(cs *csrf) {
+		cs.opts.SkipPaths = paths
+	}
+}
+
 // setStore sets the store used by the CSRF middleware.
 // Note: this is private (for now) to allow for internal API changes.
 func setStore(s store) Option {

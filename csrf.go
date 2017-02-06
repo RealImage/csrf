@@ -72,6 +72,7 @@ type options struct {
 	FieldName     string
 	ErrorHandler  http.Handler
 	CookieName    string
+	SkipPaths     string
 }
 
 // Protect is HTTP middleware that provides Cross-Site Request Forgery
@@ -187,6 +188,12 @@ func (cs *csrf) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	for _, path := range cs.opts.SkipPaths {
+		if path == r.RequestURI {
+			cs.h.ServeHTTP(w, r)
+			return
+		}
+	}
 	// Retrieve the token from the session.
 	// An error represents either a cookie that failed HMAC validation
 	// or that doesn't exist.
